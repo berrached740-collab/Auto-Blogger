@@ -17,10 +17,28 @@ def main():
     model = genai.GenerativeModel('gemini-2.5-flash')
 
     # مصادر أخبار أجنبية موثوقة وعالية الربح (اقتصاد وعملات رقمية)
-    rss_urls = [
+      rss_urls = [
+        # مصادرك القديمة (أسواق وعملات رقمية)
         "https://cointelegraph.com/rss",
         "https://search.cnbc.com/rs/search/combinedcms/view.xml?profile=MARKET_UPDATE",
-        "https://feeds.a.dj.com/rss/RSSMarketsMain.xml"
+        "https://feeds.a.dj.com/rss/RSSMarketsMain.xml",
+        
+        # مصادر العملات الرقمية الإضافية
+        "https://www.coindesk.com/arc/outboundfeeds/rss/?category=markets",
+        
+        # مصادر الأخبار التقنية
+        "https://techcrunch.com/feed/",
+        "https://www.theverge.com/rss/index.xml",
+        "https://www.wired.com/feed/rss",
+        
+        # مصادر الأخبار العالمية
+        "http://feeds.bbci.co.uk/news/world/rss.xml",
+        "http://rss.cnn.com/rss/edition.rss",
+        "https://www.aljazeera.com/xml/rss/all.xml",
+        
+        # مصادر أخبار الصحة (يمكنك حذف هذين السطرين إذا كانت مدونتك غير مهتمة بالصحة)
+        "http://rssfeeds.webmd.com/rss/rss.aspx?RSSSource=RSS_PUBLIC",
+        "https://www.healthline.com/rss"
     ]
     
     news_title = ""
