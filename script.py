@@ -46,7 +46,7 @@ def get_random_news():
 def rewrite_article(title, description):
     genai.configure(api_key=GEMINI_API_KEY)
     # استخدام الموديل الأسرع والأفضل للمقالات
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('gemini-2.5-flash')
     
     prompt = f"""
     You are a professional SEO blog writer. Write an engaging, unique, and highly readable article in English based on the following news:
