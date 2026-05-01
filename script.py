@@ -92,9 +92,15 @@ def main():
     article_html = article_html.replace('```html', '').replace('```', '').strip()
 
     # دمج الصورة في بداية المقال إذا تم العثور عليها
-    if news_image_url:
-        image_html = f'<div style="text-align: center; margin-bottom: 20px;"><img src="{news_image_url}" alt="{news_title}" style="max-width: 100%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"></div>'
-        article_html = image_html + "\n" + article_html
+    # دمج الصورة: إذا لم يجد صورة في الخبر، سيجلب صورة عشوائية عالية الدقة تناسب الموضوع
+    if not news_image_url:
+        fallback_keywords = ["finance", "technology", "business", "cryptocurrency", "stock-market", "ai", "digital"]
+        random_keyword = random.choice(fallback_keywords)
+        # جلب صورة ديناميكية من Unsplash
+        news_image_url = f"https://source.unsplash.com/800x400/?{random_keyword}"
+        
+    image_html = f'<div style="text-align: center; margin-bottom: 20px;"><img src="{news_image_url}" alt="{news_title}" style="max-width: 100%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"></div>'
+    article_html = image_html + "\n" + article_html
 
     print("🌐 Connecting to Blogger...")
     SCOPES = ['https://www.googleapis.com/auth/blogger']
