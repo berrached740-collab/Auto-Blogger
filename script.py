@@ -14,44 +14,50 @@ def main():
         return
         
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-2.5-flash')
+    model = genai.GenerativeModel('gemini-1.5-flash')
 
-    # مصادر أخبار أجنبية موثوقة وعالية الربح (اقتصاد وعملات رقمية)
-# --- 1. إعدادات الروابط (RSS) ---
-rss_urls = [
-    "https://cointelegraph.com/rss",
-    "https://search.cnbc.com/rs/search/combinedcms/view.xml?profile=MARKET_UPDATE",
-    "https://feeds.a.dj.com/rss/RSSMarketsMain.xml",
-    "https://www.coindesk.com/arc/outboundfeeds/rss/?category=markets",
-    "https://techcrunch.com/feed/",
-    "https://www.theverge.com/rss/index.xml",
-    "https://www.wired.com/feed/rss",
-    "http://feeds.bbci.co.uk/news/world/rss.xml",
-    "http://rss.cnn.com/rss/edition.rss",
-    "https://www.aljazeera.com/xml/rss/all.xml",
-    "http://rssfeeds.webmd.com/rss/rss.aspx?RSSSource=RSS_PUBLIC",
-    "https://www.healthline.com/rss"
-]
+    # --- 1. إعدادات الروابط (RSS) ---
+    rss_urls = [
+        "https://cointelegraph.com/rss",
+        "https://search.cnbc.com/rs/search/combinedcms/view.xml?profile=MARKET_UPDATE",
+        "https://feeds.a.dj.com/rss/RSSMarketsMain.xml",
+        "https://www.coindesk.com/arc/outboundfeeds/rss/?category=markets",
+        "https://techcrunch.com/feed/",
+        "https://www.theverge.com/rss/index.xml",
+        "https://www.wired.com/feed/rss",
+        "http://feeds.bbci.co.uk/news/world/rss.xml",
+        "http://rss.cnn.com/rss/edition.rss",
+        "https://www.aljazeera.com/xml/rss/all.xml",
+        "http://rssfeeds.webmd.com/rss/rss.aspx?RSSSource=RSS_PUBLIC",
+        "https://www.healthline.com/rss"
+    ]
     
     news_title = ""
     news_image_url = ""
     
+    # اختيار مصدر عشوائي لتنويع الأخبار
+    random.shuffle(rss_urls)
+    
     # محاولة العثور على خبر جديد وصورته
     for url in rss_urls:
-        feed = feedparser.parse(url)
-        if feed.entries:
-            latest_entry = feed.entries[0]
-            news_title = latest_entry.title
-            
-            # محاولة سحب الصورة المرفقة مع الخبر
-            if 'media_content' in latest_entry and len(latest_entry.media_content) > 0:
-                news_image_url = latest_entry.media_content[0]['url']
-            elif 'links' in latest_entry:
-                for link in latest_entry.links:
-                    if 'image' in link.get('type', ''):
-                        news_image_url = link.href
-                        break
-            break
+        try:
+            feed = feedparser.parse(url)
+            if feed.entries:
+                # اختيار خبر عشوائي من أول 5 أخبار لتفادي التكرار
+                latest_entry = random.choice(feed.entries[:5])
+                news_title = latest_entry.title
+                
+                # محاولة سحب الصورة المرفقة مع الخبر
+                if 'media_content' in latest_entry and len(latest_entry.media_content) > 0:
+                    news_image_url = latest_entry.media_content[0]['url']
+                elif 'links' in latest_entry:
+                    for link in latest_entry.links:
+                        if 'image' in link.get('type', ''):
+                            news_image_url = link.href
+                            break
+                break
+        except:
+            continue
             
     if not news_title:
         print("❌ No news found today.")
