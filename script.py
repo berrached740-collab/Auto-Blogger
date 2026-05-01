@@ -3,7 +3,6 @@ import feedparser
 import google.generativeai as genai
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
-import random
 
 def main():
     print("🚀 بدء تشغيل السكربت...")
@@ -14,8 +13,8 @@ def main():
         return
         
     genai.configure(api_key=api_key)
-model = genai.GenerativeModel('gemini-2.5-flash')
-    # قمنا بإضافة 3 مصادر أخبار قوية لضمان وجود أخبار دائماً
+    model = genai.GenerativeModel('gemini-2.5-flash')
+
     rss_urls = [
         "https://arabic.cnn.com/api/v1/rss/business/rss.xml",
         "https://www.aljazeera.net/api/v1/rss/economy/rss.xml",
@@ -23,7 +22,6 @@ model = genai.GenerativeModel('gemini-2.5-flash')
     ]
     
     news_title = ""
-    # السكربت سيجرب الروابط واحداً تلو الآخر حتى يجد خبراً
     for url in rss_urls:
         feed = feedparser.parse(url)
         if feed.entries:
@@ -36,9 +34,6 @@ model = genai.GenerativeModel('gemini-2.5-flash')
         
     print(f"📰 تم التقاط خبر جديد بعنوان: {news_title}")
 
-    # ====================================================
-    # 🔴 هام: رابط Adsterra المباشر الخاص بك 
-    # ====================================================
     adsterra_direct_link = "https://www.profitablecpmratenetwork.com/zu9q64fcp?key=ae8877384966f5230b597373dfdcd7b2"
 
     prompt = f"""
