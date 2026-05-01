@@ -14,8 +14,7 @@ def main():
         return
         
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-1.5-pro')
-
+model = genai.GenerativeModel('gemini-2.5-flash')
     # قمنا بإضافة 3 مصادر أخبار قوية لضمان وجود أخبار دائماً
     rss_urls = [
         "https://arabic.cnn.com/api/v1/rss/business/rss.xml",
