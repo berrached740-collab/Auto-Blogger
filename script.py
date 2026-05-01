@@ -40,7 +40,7 @@ def main():
     # ====================================================
     # 🔴 هام: رابط Adsterra المباشر الخاص بك 
     # ====================================================
-    adsterra_direct_link = "https://www.example.com/your-adsterra-link"
+    adsterra_direct_link = "https://www.profitablecpmratenetwork.com/zu9q64fcp?key=ae8877384966f5230b597373dfdcd7b2"
 
     prompt = f"""
     أنت مدون خبير في السيو (SEO) والاقتصاد والتقنية.
