@@ -26,7 +26,7 @@ rss_urls = [
 BLOG_ID = os.environ.get("BLOG_ID")
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 # ضع الرابط المباشر الخاص بإعلاناتك (Adsterra) هنا بين علامتي التنصيص
-ADSTERRA_LINK = "https://www.google.com"
+ADSTERRA_LINK = "https://www.profitablecpmratenetwork.com/ve3ktt21?key=949627e2df43786ddffa0da016c1bdcb"
 
 # --- 3. دالة جلب الأخبار ---
 def get_random_news():
