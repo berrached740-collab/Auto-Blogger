@@ -3,60 +3,88 @@ import feedparser
 import google.generativeai as genai
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
+import random
 
 def main():
-    print("🚀 بدء تشغيل السكربت...")
+    print("🚀 Starting the Script...")
 
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
-        print("❌ خطأ: لم يتم العثور على مفتاح GEMINI_API_KEY")
+        print("❌ Error: GEMINI_API_KEY not found")
         return
         
     genai.configure(api_key=api_key)
     model = genai.GenerativeModel('gemini-2.5-flash')
 
+    # مصادر أخبار أجنبية موثوقة وعالية الربح (اقتصاد وعملات رقمية)
     rss_urls = [
-        "https://arabic.cnn.com/api/v1/rss/business/rss.xml",
-        "https://www.aljazeera.net/api/v1/rss/economy/rss.xml",
-        "https://ar.cointelegraph.com/rss"
+        "https://cointelegraph.com/rss",
+        "https://search.cnbc.com/rs/search/combinedcms/view.xml?profile=MARKET_UPDATE",
+        "https://feeds.a.dj.com/rss/RSSMarketsMain.xml"
     ]
     
     news_title = ""
+    news_image_url = ""
+    
+    # محاولة العثور على خبر جديد وصورته
     for url in rss_urls:
         feed = feedparser.parse(url)
         if feed.entries:
-            news_title = feed.entries[0].title
+            latest_entry = feed.entries[0]
+            news_title = latest_entry.title
+            
+            # محاولة سحب الصورة المرفقة مع الخبر
+            if 'media_content' in latest_entry and len(latest_entry.media_content) > 0:
+                news_image_url = latest_entry.media_content[0]['url']
+            elif 'links' in latest_entry:
+                for link in latest_entry.links:
+                    if 'image' in link.get('type', ''):
+                        news_image_url = link.href
+                        break
             break
             
     if not news_title:
-        print("❌ لم يتم العثور على أي أخبار في جميع المصادر اليوم.")
+        print("❌ No news found today.")
         return
         
-    print(f"📰 تم التقاط خبر جديد بعنوان: {news_title}")
+    print(f"📰 Found new article: {news_title}")
+    if news_image_url:
+        print(f"📸 Found image for the article: {news_image_url}")
 
-    adsterra_direct_link = "https://www.profitablecpmratenetwork.com/zu9q64fcp?key=ae8877384966f5230b597373dfdcd7b2"
+    # ====================================================
+    # 🔴 هام: رابط Adsterra المباشر الخاص بك 
+    # ====================================================
+    adsterra_direct_link = "https://www.profitablecpmratenetwork.com/ve3ktt21?key=949627e2df43786ddffa0da016c1bdcb"
 
+    # أمر الكتابة بالإنجليزية (Prompt)
     prompt = f"""
-    أنت مدون خبير في السيو (SEO) والاقتصاد والتقنية.
-    اكتب مقالاً حصرياً وشاملاً باللغة العربية بناءً على هذا الخبر: "{news_title}".
+    You are an expert SEO blogger and financial analyst.
+    Write a highly engaging, unique, and comprehensive blog post in ENGLISH based on this news headline: "{news_title}".
     
-    شروط المقال:
-    - طول المقال 500 كلمة.
-    - استخدم تنسيق HTML فقط (استخدم وسوم <h2> و <h3> للعناوين الفرعية، و <p> للفقرات).
-    - لا تكتب أي مقدمات، أعطني كود HTML مباشرة.
-    - في منتصف المقال وفي نهايته، قم بإنشاء زر أنيق باستخدام HTML و CSS مكتوب عليه "اضغط هنا لمتابعة أحدث التوصيات الحصرية" واجعل الرابط الخاص به هو هذا: {adsterra_direct_link}
+    Requirements:
+    - Length: Around 600 words.
+    - Output MUST be pure HTML code only (no markdown formatting like ```html).
+    - Use <h2> and <h3> for subheadings, and <p> for paragraphs.
+    - Write in a professional yet captivating journalistic tone.
+    - At the end of the article, create a beautiful, eye-catching CSS-styled button that says "Click Here For Exclusive Market Insights" and set its href attribute to exactly this link: {adsterra_direct_link}
+    - Do not write any intro or outro, just the HTML.
     """
     
-    print("🤖 جاري كتابة المقال بالذكاء الاصطناعي...")
+    print("🤖 AI is generating the article in English...")
     response = model.generate_content(prompt)
     article_html = response.text
     article_html = article_html.replace('```html', '').replace('```', '').strip()
 
-    print("🌐 جاري الاتصال بمدونة بلوجر...")
+    # دمج الصورة في بداية المقال إذا تم العثور عليها
+    if news_image_url:
+        image_html = f'<div style="text-align: center; margin-bottom: 20px;"><img src="{news_image_url}" alt="{news_title}" style="max-width: 100%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"></div>'
+        article_html = image_html + "\n" + article_html
+
+    print("🌐 Connecting to Blogger...")
     SCOPES = ['https://www.googleapis.com/auth/blogger']
     
     if not os.path.exists('token.json'):
-        print("❌ خطأ: ملف token.json غير موجود!")
+        print("❌ Error: token.json not found!")
         return
         
     creds = Credentials.from_authorized_user_file('token.json', SCOPES)
@@ -67,14 +95,14 @@ def main():
     post_body = {
         'title': news_title,
         'content': article_html,
-        'labels': ['أخبار عاجلة', 'اقتصاد']
+        'labels': ['Breaking News', 'Finance', 'Crypto']
     }
     
-    print("📝 جاري إرسال المقال إلى بلوجر...")
+    print("📝 Publishing the article to Blogger...")
     request = service.posts().insert(blogId=blog_id, body=post_body, isDraft=False)
     response = request.execute()
     
-    print(f"✅ تم النشر بنجاح! رابط المقال: {response.get('url')}")
+    print(f"✅ Published successfully! Article URL: {response.get('url')}")
 
 if __name__ == '__main__':
     main()
